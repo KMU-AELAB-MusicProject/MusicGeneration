@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/algorithm/musicGeneration3/trained/phrase/phrase_model"
+all_model_checkpoint_paths: "/home/algorithm/musicGeneration3/trained/phrase/phrase_model"
