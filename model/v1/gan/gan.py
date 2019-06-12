@@ -3,19 +3,22 @@ import pickle
 import numpy as np
 import tensorflow as tf
 
-from ..config import *
-from ..utils import gan_batch_iterator
+from model.v1.config import *
+from model.v1.utils import gan_batch_iterator
 from .discriminator import discriminator
 from .generator import generator
 
 
 class GAN(object):
-    def __init__(self, sess, save_path, note_path):
+    def __init__(self, sess, save_path, note_path, bar_generator, phrase_generator):
         self.sess = sess
         self.lambd = 1.0
 
-        self.build_placeholder()
-        self.build_model()
+        self.bar_generator = bar_generator
+        self.phrase_generator = phrase_generator
+
+        self._build_placeholder()
+        self._build_model()
         self.generate_music()
 
         self.save_path = save_path
@@ -24,25 +27,24 @@ class GAN(object):
         self.sess.run(tf.global_variables_initializer())
         self.saver = tf.train.Saver(max_to_keep=GAN_EPOCH)
 
-
-    def build_placeholder(self):
-        self.z = tf.placeholder(tf.float32, shape=[None, Z_SIZE])
+    def _build_placeholder(self):
+        self.z = tf.placeholder(tf.float32, shape=[None, PHRASE_SIZE, Z_SIZE])
         self.real = tf.placeholder(tf.float32, shape=[None, BAR_SIZE * PHRASE_SIZE, PITCH_SIZE])
         self.batch_size = tf.placeholder(tf.int32)
         self.pre_phrase = tf.placeholder(tf.float32, shape=[None, BAR_SIZE * PHRASE_SIZE, PITCH_SIZE])
 
-    def build_model(self):
+    def _build_model(self):
         self.generator = generator(GENERATOR)
         self.discriminator = discriminator(DISCRIMINATOR)
-        self.networks()
+        self.network()
 
     def generate_music(self):
-        self.logit, _ = self.generator(self.z, self.pre_phrase)
+        self.logit, _ = self.generator(self.z, self.pre_phrase, self.bar_generator, self.phrase_generator)
         cond = tf.less(self.logit, tf.zeros(tf.shape(self.logit)))
         self.music = tf.where(cond, tf.zeros(tf.shape(self.logit)), tf.ones(tf.shape(self.logit)))
 
-    def networks(self):
-        self.logits, pre_phrase_feature = self.generator(self.z, self.pre_phrase, True, False)
+    def network(self):
+        self.logits, pre_phrase_feature = self.generator(self.z, self.pre_phrase, self.bar_generator, self.phrase_generator, True, False)
         cond = tf.less(self.logits, tf.zeros(tf.shape(self.logits)))
         self.outputs = tf.where(cond, tf.zeros(tf.shape(self.logits)), tf.ones(tf.shape(self.logits)))
 
@@ -91,7 +93,7 @@ class GAN(object):
         for i in range(0, phrase_size):
             pre_phrase, logit = self.sess.run([self.music, self.logit],
                                        feed_dict={self.z: np.random.uniform(-1, 1, size=(1, Z_SIZE)),
-                                                  self.pre_phrase: pre_phrase})
+                                                  self.pre_phrase: pre_phrase, self.phrase_generator.phrase: pre_phrase})
             music.append(pre_phrase)
             tmp.append(logit)
 
@@ -109,12 +111,12 @@ class GAN(object):
                     data = pickle.load(fp)
 
                 for phrase, pre_phrase in gan_batch_iterator(data, GAN_BATCH_SIZE):
-                    z = np.random.uniform(-1, 1, size=(len(phrase), Z_SIZE))
+                    z = np.random.uniform(-1, 1, size=(len(phrase),PHRASE_SIZE, Z_SIZE))
 
                     _, _, loss1, loss2 = self.sess.run([self.d_op, self.g_op, self.d_loss, self.g_loss],
                                                        feed_dict={self.z: z, self.real: phrase,
                                                                   self.pre_phrase: pre_phrase,
-                                                                  self.batch_size: len(phrase)})
+                                                                  self.batch_size: len(phrase), self.phrase_generator.phrase: pre_phrase})
                     d_loss += loss1
                     g_loss += loss2
 

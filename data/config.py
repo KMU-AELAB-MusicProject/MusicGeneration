@@ -1,6 +1,6 @@
-DATA_PATH = '/home/algorithm/musicGeneration3/data'
-MIDI_FILE_PATH = '/home/algorithm/musicGeneration3/data/midi'
-NP_FILE_PATH = '/home/algorithm/musicGeneration3/data/np'
+DATA_PATH = '/home/algorithm/music_project/data'
+MIDI_FILE_PATH = '/home/algorithm/music_project/data/midi'
+NP_FILE_PATH = '/home/algorithm/music_project/data/np'
 
 
 

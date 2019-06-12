@@ -3,7 +3,7 @@ import argparse
 
 import tensorflow as tf
 
-from model.model import Model
+from model.v1.model import Model
 from config import *
 
 
@@ -49,6 +49,7 @@ def main():
         note_path = os.path.join(MUSIC_PATH, str(_max + 1))
 
     os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+
     model = Model(tf.Session(), save_path, args.start_from, args.model_number, args.pre_train, note_path)
     model.train()
 

@@ -1,8 +1,8 @@
-DATA_PATH = '/home/algorithm/musicGeneration3/data'
-MIDI_FILE_PATH = '/home/algorithm/musicGeneration3/data/midi'
-NP_FILE_PATH = '/home/algorithm/musicGeneration3/data/np'
-MODEL_PATH = '/home/algorithm/musicGeneration3/trained'
-MUSIC_PATH = '/home/algorithm/musicGeneration3/music'
+DATA_PATH = '/home/algorithm/music_project/data'
+MIDI_FILE_PATH = '/home/algorithm/music_project/data/midi'
+NP_FILE_PATH = '/home/algorithm/music_project/data/np'
+MODEL_PATH = '/home/algorithm/music_project/trained'
+MUSIC_PATH = '/home/algorithm/music_project/music'
 
 
 PHRASE_SIZE = 4

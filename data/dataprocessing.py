@@ -2,6 +2,7 @@
 """
 import os
 import sys
+import time
 import pickle
 import joblib
 import random
@@ -11,6 +12,7 @@ import multiprocessing
 
 import numpy as np
 from pypianoroll import Multitrack
+from google_drive_downloader import GoogleDriveDownloader as gdd
 
 from config import *
 
@@ -137,17 +139,23 @@ def converter(file):
 def main():
     if not os.path.exists(os.path.join(DATA_PATH, 'np')):
         os.mkdir(os.path.join(DATA_PATH, 'np'))
-    if not os.path.exists(os.path.join(DATA_PATH, 'classification_data')):
-        os.mkdir(os.path.join(DATA_PATH, 'classification_data'))
+    if not os.path.exists(os.path.join(DATA_PATH, 'bar_data')):
+        os.mkdir(os.path.join(DATA_PATH, 'bar_data'))
+    if not os.path.exists(os.path.join(DATA_PATH, 'phrase_data')):
+        os.mkdir(os.path.join(DATA_PATH, 'phrase_data'))
     if not os.path.exists(os.path.join(DATA_PATH, 'gan_data')):
         os.mkdir(os.path.join(DATA_PATH, 'gan_data'))
-    
+    if not os.path.exists(os.path.join(DATA_PATH, 'midi')):
+        gdd.download_file_from_google_drive(file_id='1L854vE7ghnI8uD-gR5McDZ71Wt-g9iH4',
+                                            dest_path=os.path.join(DATA_PATH, 'midi.zip'),
+                                            unzip=True)
+
     midi_info = {}
-    
+
     warnings.filterwarnings('ignore')
-    
+
     files = list(filter(lambda x: '.mid' in x, os.listdir(MIDI_FILE_PATH)))
-    
+
     if multiprocessing.cpu_count() > 1:
          kv_pairs = joblib.Parallel(n_jobs=multiprocessing.cpu_count() - 1, verbose=5)(joblib.delayed(converter)(file) for file in files)
          for kv_pair in kv_pairs:
@@ -158,7 +166,7 @@ def main():
             kv_pair = converter(file)
             if kv_pair is not None:
                 midi_info[kv_pair[0]] = kv_pair[1]
-    
+
     with open(os.path.join(DATA_PATH, 'midi_info.pkl'), 'wb') as fp:
         pickle.dump(midi_info, fp)
 

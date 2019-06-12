@@ -1,7 +1,6 @@
 import tensorflow as tf
-import importlib
 
-from ..config import *
+from model.v1.config import *
 
 
 def discriminator(model_name='Default'):
