@@ -1,8 +1,9 @@
-DATA_PATH = '/home/algorithm/music_project/data'
-MIDI_FILE_PATH = '/home/algorithm/music_project/data/midi'
-NP_FILE_PATH = '/home/algorithm/music_project/data/np'
-MODEL_PATH = '/home/algorithm/music_project/trained'
-MUSIC_PATH = '/home/algorithm/music_project/music'
+ROOT_PATH = '/home/algorithm/musicProject/'
+DATA_PATH = ROOT_PATH + 'data'
+MIDI_FILE_PATH = ROOT_PATH + 'data/midi'
+NP_FILE_PATH = ROOT_PATH + 'data/np'
+MODEL_PATH = ROOT_PATH + 'trained'
+MUSIC_PATH = ROOT_PATH + 'music'
 
 
 PHRASE_SIZE = 4

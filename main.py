@@ -1,9 +1,10 @@
 import os
+import time
 import argparse
 
 import tensorflow as tf
 
-from model.v1.model import Model
+from model.v2.model import Model
 from config import *
 
 
@@ -26,6 +27,14 @@ def main():
         os.mkdir(os.path.join(MODEL_PATH))
     if not os.path.exists(os.path.join(MODEL_PATH, 'gan')):
         os.mkdir(os.path.join(MODEL_PATH, 'gan'))
+    if not os.path.exists(os.path.join(ROOT_PATH, 'board')):
+        os.mkdir(os.path.join(ROOT_PATH, 'board'))
+        time.sleep(0.1)
+        os.mkdir(os.path.join(ROOT_PATH, 'board', 'bar'))
+        time.sleep(0.1)
+        os.mkdir(os.path.join(ROOT_PATH, 'board', 'phrase'))
+        time.sleep(0.1)
+        os.mkdir(os.path.join(ROOT_PATH, 'board', 'gan'))
 
     if args.start_from:
         _max = 0

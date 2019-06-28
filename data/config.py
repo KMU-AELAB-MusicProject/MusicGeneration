@@ -1,6 +1,7 @@
-DATA_PATH = '/home/algorithm/music_project/data'
-MIDI_FILE_PATH = '/home/algorithm/music_project/data/midi'
-NP_FILE_PATH = '/home/algorithm/music_project/data/np'
+ROOT_PATH = '/home/algorithm/musicProject/'
+DATA_PATH = ROOT_PATH + 'data'
+MIDI_FILE_PATH = ROOT_PATH + 'data/midi'
+NP_FILE_PATH = ROOT_PATH + 'data/np'
 
 
 
